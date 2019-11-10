@@ -1,0 +1,13 @@
+const HEALTH = 2;
+const ENEMY_GAP = 100;
+const TRACK_WIDTH = 300;
+const TRACK_HEIGHT = 600;
+const SPEED = 5;
+const LANES = 3;
+const INITIAL_X = 0;
+const INITIAL_Y = 0;
+const BLOCK_HEIGHT = 100;
+const BLOCK_WIDTH = Math.abs(TRACK_WIDTH / LANES);
+const POSSIBLE_X = getPossibleX(BLOCK_WIDTH, LANES);
+const BULLET_SIZE = 10;
+const BULLET_SPEED = 10;
