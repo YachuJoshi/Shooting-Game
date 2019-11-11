@@ -39,7 +39,6 @@ class World {
         });
 
         let id = setInterval(() => {
-            console.log(this.healthBars);
             this.updateBackground(); 
             this.checkDistance();
             this.obstacles.forEach(obstacle => {
