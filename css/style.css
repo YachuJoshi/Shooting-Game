@@ -1,13 +1,46 @@
-.race-track {
+.race-track-0 {
     position: relative;
     height: 600px;
     width: 300px;
-    margin: 0 auto;
+    margin: 0 auto; 
     background-image: url(../images/clouds.jpg);
     background-position: 0px 100px;
     background-repeat: repeat-y;
     overflow: hidden;
     background-size: cover;
+}
+
+.container {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.left-button , .right-button {
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 32px;
+    background: #201885;
+    border: none;
+    color: #CDCCDC;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.shoot-button {
+    margin-left: 30px;
+    background: #C80B31;
+    color: white;
+    font-size: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.left-button:focus, .right-button:focus, .shoot-button:focus {
+    outline: none;
+}
+
+.left-button:active, .right-button:active, .shoot-button:active { 
+    transform: translateY(2px); 
 }
 
 .car {
@@ -48,8 +81,7 @@
     background-image: url(../images/full-hp.png);
 }
 
-.score {
-    float: right;
+.car-health, .score {
     margin: 10px;
     background: #243665;
     color: #8BD8BD;
@@ -59,4 +91,12 @@
     padding: .3em;
     outline: none;
     letter-spacing: 3px;
+}
+
+.car-health {
+    float: left;
+}
+
+.score {
+    float: right;
 }

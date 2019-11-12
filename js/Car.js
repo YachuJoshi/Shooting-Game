@@ -25,20 +25,20 @@ class Car {
         this.element.style.top = this.y + 'px';
     }
 
-    moveX() {
-        document.addEventListener('keydown', event => {
-            if(event.keyCode === 37 || event.which === 37) {
+    moveX(gameID, keyCode) {
+        if(gameID === 0) {
+            if(keyCode === 37) {
                 if(this.x >= BLOCK_WIDTH){
                     this.x -= BLOCK_WIDTH;
                     this.render();
-                } 
+                }
             }
-            if(event.keyCode === 39 || event.which === 39) {
+            if(keyCode === 39) {
                 if(this.x <= BLOCK_WIDTH + 36){
                     this.x += BLOCK_WIDTH;
                     this.render();
                 }
             }
-        });
+        }
     }
 }

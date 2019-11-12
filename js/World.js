@@ -10,6 +10,7 @@ class World {
         this.healthBars = [];
         this.bullets = [];
         this.distance = 0;
+        this.gameID = this.constructor.increaseCount();
         this.isGameActive = false;
         this.scoreInitElement();
     }
@@ -18,6 +19,9 @@ class World {
         let scoreElem = document.createElement('span');
         scoreElem.className = 'score';
         this.scoreElement = scoreElem;
+        let healthElem = document.createElement('span');
+        healthElem.className = 'car-health';
+        this.healthElement = healthElem;
     }
 
     render() {
@@ -30,16 +34,47 @@ class World {
         });
     }
 
-    gameLoop() {
-        this.car.moveX();
-        document.addEventListener('keypress', () => {
-            if(event.keyCode === 32 || event.which === 32) {
-                this.createBullet();
+    gameEvent(gameID) {
+        document.addEventListener('keydown', key => {
+            if(this.isGameActive) {
+                this.car.moveX(gameID, key.keyCode);
             }
         });
 
+        document.querySelector('.left-button').addEventListener('click', () => {
+            if(this.isGameActive) {
+                if(this.car.x >= BLOCK_WIDTH){
+                    this.car.x -= BLOCK_WIDTH;
+                    this.car.render();
+                }
+            }
+        });
+        
+        document.querySelector('.right-button').addEventListener('click', () => {
+            if(this.isGameActive) {
+                if(this.car.x <= BLOCK_WIDTH + 36){
+                    this.car.x += BLOCK_WIDTH;
+                    this.car.render();
+                }
+            }
+        });
+
+        if(gameID === 0) {
+            document.addEventListener('keypress', () => {
+                if((event.keyCode === 32 || event.which === 32) && this.isGameActive) {
+                    this.createBullet();
+                }
+            });
+        }
+        document.querySelector('.shoot-button').addEventListener('click', () => {
+            if(this.isGameActive) {
+                this.createBullet();
+            }
+        });
+    }
+
+    gameLoop() {
         let id = setInterval(() => {
-            console.log(this.healthBars);
             this.updateBackground(); 
             this.checkDistance();
             this.obstacles.forEach(obstacle => {
@@ -50,21 +85,21 @@ class World {
                 this.healthBars = filterNull(this.healthBars);
                 healthBar.update();
             });
-
+            if(this.distance >= 6000) {
+                this.isGameActive = false;
+                clearInterval(id);
+                alert(`You completed the game. Score: ${this.distance}`);
+            } else if(Math.round(this.car.health) <= 0) {
+                this.isGameActive = false;
+                clearInterval(id);
+                alert(`Game Over!`);
+            }
             this.checkObstacleCollision();
 
             this.updateObstacles();
             this.updateBullet();
 
-            if(this.distance >= 6000) {
-                alert(`You completed the game. Score: ${this.distance}` );
-                this.isGameActive = false;
-                clearInterval(id);
-            } else if(Math.round(this.car.health) <= 0) {
-                alert(`Game Over!`);
-                this.isGameActive = false;
-                clearInterval(id);
-            }
+            this.showCarHealth();
             this.showScore();
         }, 20);
     }
@@ -77,6 +112,7 @@ class World {
         this.healthBars.forEach(healthBar => {
             this.parentElement.appendChild(healthBar.element);
         });
+        this.parentElement.appendChild(this.healthElement);
         this.parentElement.appendChild(this.scoreElement);
     }
 
@@ -122,6 +158,18 @@ class World {
             }
             animationCoutner++;
         }, 12);
+    }
+
+    createHomeScreen() {
+        let homeScreen = new Screen({
+            screenName: 'home-screen'
+        });
+    }
+
+    createGameOverScreen() {
+        let gameOverScreen = new Screen({
+            screenName: 'game-over-screen'
+        });
     }
 
     checkDistance() {
@@ -220,21 +268,30 @@ class World {
         this.parentElement.style.backgroundPosition = '0px ' + this.distance + 'px';
     }
 
+    showCarHealth() {
+        this.healthElement.textContent = "HEALTH: " + Math.round(this.car.health);
+    }
+
     showScore() {
         this.scoreElement.textContent = "SCORE: " + this.distance;
+    }
+
+    static increaseCount() {
+        return count++;
     }
 
     init() {
         this.isGameActive = true;
         this.createObstacle();
-        this.gameLoop();
+        this.gameEvent(this.gameID);
+        this.gameLoop(this.gameID);
         this.append();
         this.render();
     }
 }
 
 const game = new World({
-    element: document.querySelector('.race-track')
+    element: document.querySelector('.race-track-0')
 });
 
 game.init();
