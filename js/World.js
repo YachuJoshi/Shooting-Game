@@ -297,12 +297,14 @@ class World {
     checkBulletCollision(bullet) {
         for (let i=0; i<this.obstacles.length; i++) {
             let obs = this.obstacles[i];
+            let healthBar = this.healthBars[i];
             if (
                 obs.x + BLOCK_WIDTH > bullet.x &&
                 obs.x < bullet.x + BULLET_SIZE &&
                 obs.y + BLOCK_HEIGHT > bullet.y &&
                 obs.y < BULLET_SIZE + bullet.y
               ){
+                healthBar.element.style.backgroundImage = "url('images/half-hp.png')";
                 this.createExplosion(obs);
                 return obs;
             }
