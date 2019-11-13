@@ -5,7 +5,6 @@ class World {
             x: TRACK_WIDTH / 2 - BLOCK_WIDTH / 2 ,
             y: TRACK_HEIGHT - BLOCK_HEIGHT
         });
-        this.coins = [];
         this.obstacles = [];
         this.healthBars = [];
         this.bullets = [];
@@ -34,10 +33,10 @@ class World {
         });
     }
 
-    gameEvent(gameID) {
+    gameEvent() {
         document.addEventListener('keydown', key => {
             if(this.isGameActive) {
-                this.car.moveX(gameID, key.keyCode);
+                this.car.moveX(key.keyCode);
             }
         });
 
@@ -59,13 +58,11 @@ class World {
             }
         });
 
-        if(gameID === 0) {
-            document.addEventListener('keypress', () => {
-                if((event.keyCode === 32 || event.which === 32) && this.isGameActive) {
-                    this.createBullet();
-                }
-            });
-        }
+        document.addEventListener('keypress', () => {
+            if((event.keyCode === 32 || event.which === 32) && this.isGameActive) {
+                this.createBullet();
+            }
+        });
         document.querySelector('.shoot-button').addEventListener('click', () => {
             if(this.isGameActive) {
                 this.createBullet();
@@ -86,13 +83,19 @@ class World {
                 healthBar.update();
             });
             if(this.distance >= 6000) {
+                console.log(`You completed the game. Score: ${this.distance}` );
                 this.isGameActive = false;
                 clearInterval(id);
-                alert(`You completed the game. Score: ${this.distance}`);
+                this.parentElement.removeChild(this.healthElement);
+                this.parentElement.removeChild(this.scoreElement);
+                this.createGameOverScreen();
             } else if(Math.round(this.car.health) <= 0) {
+                console.log(`Game Over!`);
                 this.isGameActive = false;
                 clearInterval(id);
-                alert(`Game Over!`);
+                this.parentElement.removeChild(this.healthElement);
+                this.parentElement.removeChild(this.scoreElement);
+                this.createGameOverScreen();
             }
             this.checkObstacleCollision();
 
@@ -160,16 +163,73 @@ class World {
         }, 12);
     }
 
+    reset() {
+        this.car.reset();
+        this.distance = 0;
+        this.bullets.forEach(bullet => {
+            if(checkParentNode(this.parentElement, bullet.element)) {
+                this.parentElement.removeChild(bullet.element);
+            }
+        });
+        this.bullets = [];
+        this.obstacles.forEach(obs => {
+            if(checkParentNode(this.parentElement, obs.element)) {
+                this.parentElement.removeChild(obs.element);
+            }
+        });
+        this.obstacles = [];
+        this.healthBars.forEach(healthBar => {
+            if(checkParentNode(this.parentElement, healthBar.element)) {
+                this.parentElement.removeChild(healthBar.element);
+            }
+        });
+        this.healthBars = [];
+    }
+
     createHomeScreen() {
         let homeScreen = new Screen({
             screenName: 'home-screen'
         });
+        this.parentElement.appendChild(homeScreen.element);
+        let startBtn = document.createElement('button');
+        startBtn.className = 'home-screen-start-button';
+        homeScreen.element.appendChild(startBtn);
+        homeScreen.display();
+        startBtn.onclick = () => {
+            homeScreen.hide();
+            this.parentElement.removeChild(homeScreen.element);
+            this.reset();
+            this.init();
+        }
     }
 
     createGameOverScreen() {
         let gameOverScreen = new Screen({
             screenName: 'game-over-screen'
         });
+        this.parentElement.appendChild(gameOverScreen.element);
+        gameOverScreen.display();
+        let gameOverText = document.createElement('div');
+        gameOverText.className = "result-screen-game-over";
+        gameOverText.innerHTML = "<p>Game Over</p>";
+        gameOverScreen.element.appendChild(gameOverText);
+        gameOverScreen.element.appendChild(document.createElement('hr'));
+
+        let scoreBoard = document.createElement('div');
+        scoreBoard.className = 'score-board';
+        gameOverScreen.element.appendChild(scoreBoard);
+        scoreBoard.textContent = "Final Score: " + this.distance;
+
+        let tryAgainBtn = document.createElement('button');
+        tryAgainBtn.className = 'try-again-button';
+        tryAgainBtn.textContent = 'Try Again!';
+        gameOverScreen.element.appendChild(tryAgainBtn);
+        gameOverScreen.element.appendChild(document.createElement('hr'));
+        tryAgainBtn.onclick = () => {
+            gameOverScreen.hide();
+            this.parentElement.removeChild(gameOverScreen.element);
+            this.createHomeScreen();
+        }
     }
 
     checkDistance() {
@@ -283,8 +343,8 @@ class World {
     init() {
         this.isGameActive = true;
         this.createObstacle();
-        this.gameEvent(this.gameID);
-        this.gameLoop(this.gameID);
+        this.gameEvent();
+        this.gameLoop();
         this.append();
         this.render();
     }
@@ -294,4 +354,4 @@ const game = new World({
     element: document.querySelector('.race-track-0')
 });
 
-game.init();
+game.createHomeScreen();
