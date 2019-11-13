@@ -1,13 +1,116 @@
-.race-track {
+.race-track-0 {
     position: relative;
     height: 600px;
     width: 300px;
-    margin: 0 auto;
+    margin: 0 auto; 
     background-image: url(../images/clouds.jpg);
     background-position: 0px 100px;
     background-repeat: repeat-y;
     overflow: hidden;
     background-size: cover;
+}
+
+.home-screen {
+    position: relative;
+    height: 600px;
+    widows: 300px;
+    margin: 0 auto;
+    background-image: url(../images/homescreen-background.jpg);
+    background-position: center;
+    background-repeat: none;
+    overflow: hidden;
+    background-size: cover;
+}
+
+.home-screen-start-button {
+    position: absolute;
+    width: 130px;
+    height: 65px;
+    top: 465px;
+    left: 136px;
+    cursor: pointer;
+    background: url(../images/homescreen-start.png) no-repeat;    
+    outline: none;
+    border: none;  
+}
+
+.game-over-screen {
+    position: absolute;
+    padding-top: 100px;
+    width: 100%;
+    height: 100%;
+    background-image: url(../images/gameoverbackground.png);
+    display: none;
+    font-size: 25px;
+    color: white;
+    text-align: center;
+    line-height: 50px;
+}
+
+.score-board {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    padding: .3em;
+    width: auto;
+    outline: none;
+    font-size: 30px;
+    color: white;
+    
+}
+
+.result-screen-game-over {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 32px;
+    margin: 0;
+}
+
+.try-again-button {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    position: absolute;
+    width: 120px;
+    height: 40px;
+    font-size: 20px;
+    background: #8AAAE5;
+    color: white;
+    border-radius: 10px;
+    top: 332px;
+    left: 90px;
+    text-align: center;
+    cursor: pointer;    
+    outline: none;
+    border: none; 
+}
+
+.container {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.left-button , .right-button {
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 32px;
+    background: #201885;
+    border: none;
+    color: #CDCCDC;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.shoot-button {
+    margin-left: 30px;
+    background: #C80B31;
+    color: white;
+    font-size: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.left-button:focus, .right-button:focus, .shoot-button:focus {
+    outline: none;
+}
+
+.left-button:active, .right-button:active, .shoot-button:active { 
+    transform: translateY(2px); 
 }
 
 .car {
@@ -48,8 +151,7 @@
     background-image: url(../images/full-hp.png);
 }
 
-.score {
-    float: right;
+.car-health, .score {
     margin: 10px;
     background: #243665;
     color: #8BD8BD;
@@ -60,3 +162,12 @@
     outline: none;
     letter-spacing: 3px;
 }
+
+.car-health {
+    float: left;
+}
+
+.score {
+    float: right;
+}
+
