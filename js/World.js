@@ -9,6 +9,11 @@ class World {
         this.healthBars = [];
         this.bullets = [];
         this.distance = 0;
+        this.onKeyDownMove = this.onKeyDownMove.bind(this);
+        this.onKeyPressShoot = this.onKeyPressShoot.bind(this)
+        this.moveLeft = this.moveLeft.bind(this);
+        this.moveRight = this.moveRight.bind(this);
+        this.forBullet = this.forBullet.bind(this);
         this.gameID = this.constructor.increaseCount();
         this.isGameActive = false;
         this.scoreInitElement();
@@ -34,40 +39,59 @@ class World {
     }
 
     gameEvent() {
-        document.addEventListener('keydown', key => {
-            if(this.isGameActive) {
-                this.car.moveX(key.keyCode);
-            }
-        });
+        document.addEventListener('keydown', this.onKeyDownMove);
 
-        document.querySelector('.left-button').addEventListener('click', () => {
-            if(this.isGameActive) {
-                if(this.car.x >= BLOCK_WIDTH){
-                    this.car.x -= BLOCK_WIDTH;
-                    this.car.render();
-                }
-            }
-        });
-        
-        document.querySelector('.right-button').addEventListener('click', () => {
-            if(this.isGameActive) {
-                if(this.car.x <= BLOCK_WIDTH + 36){
-                    this.car.x += BLOCK_WIDTH;
-                    this.car.render();
-                }
-            }
-        });
+        document.querySelector('.left-button').addEventListener('click', this.moveLeft);
+        document.querySelector('.right-button').addEventListener('click', this.moveRight);
 
-        document.addEventListener('keypress', () => {
-            if((event.keyCode === 32 || event.which === 32) && this.isGameActive) {
-                this.createBullet();
+        document.addEventListener('keypress', this.onKeyPressShoot);
+        document.querySelector('.shoot-button').addEventListener('click', this.forBullet);
+    }
+
+    onKeyDownMove(key) {
+        if(this.isGameActive) {
+            this.car.moveX(key.keyCode);
+        }
+    }
+
+    moveLeft() {
+        if(this.isGameActive) {
+            if(this.car.x >= BLOCK_WIDTH){
+                this.car.x -= BLOCK_WIDTH;
+                this.car.render();
             }
-        });
-        document.querySelector('.shoot-button').addEventListener('click', () => {
-            if(this.isGameActive) {
-                this.createBullet();
+        }
+    }
+
+    moveRight() {
+        if(this.isGameActive) {
+            if(this.car.x <= BLOCK_WIDTH + 36){
+                this.car.x += BLOCK_WIDTH;
+                this.car.render();
             }
-        });
+        }
+    }
+
+    onKeyPressShoot(key) {
+        if((key.keyCode === 32 || key.which === 32) && this.isGameActive) {
+            this.createBullet();
+        }
+    }
+
+    forBullet() {
+        if(this.isGameActive) {
+            this.createBullet();
+        }
+    }
+
+    resetEventHandler() {
+        document.removeEventListener('keydown', this.onKeyDownMove);
+
+        document.querySelector('.left-button').removeEventListener('click', this.moveLeft);
+        document.querySelector('.right-button').removeEventListener('click', this.moveRight);
+
+        document.removeEventListener('keypress', this.onKeyPressShoot);
+        document.querySelector('.shoot-button').removeEventListener('click', this.forBullet);
     }
 
     gameLoop() {
@@ -197,7 +221,6 @@ class World {
         homeScreen.display();
         startBtn.onclick = () => {
             homeScreen.hide();
-            this.parentElement.removeChild(homeScreen.element);
             this.reset();
             this.init();
         }
@@ -227,7 +250,7 @@ class World {
         gameOverScreen.element.appendChild(document.createElement('hr'));
         tryAgainBtn.onclick = () => {
             gameOverScreen.hide();
-            this.parentElement.removeChild(gameOverScreen.element);
+            this.resetEventHandler();
             this.createHomeScreen();
         }
     }
