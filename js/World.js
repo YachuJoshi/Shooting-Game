@@ -72,14 +72,14 @@ class World {
         }
     }
 
-    onKeyPressShoot(key) {
-        if((key.keyCode === 32 || key.which === 32) && this.isGameActive) {
+    forBullet() {
+        if(this.isGameActive) {
             this.createBullet();
         }
     }
 
-    forBullet() {
-        if(this.isGameActive) {
+    onKeyPressShoot(key) {
+        if((key.keyCode === 32 || key.which === 32) && this.isGameActive) {
             this.createBullet();
         }
     }
