@@ -106,20 +106,18 @@ class World {
                 this.healthBars = filterNull(this.healthBars);
                 healthBar.update();
             });
-            if(this.distance >= 6000) {
-                console.log(`You completed the game. Score: ${this.distance}` );
+            if(this.distance >= DISTANCE_LIMIT) {
                 this.isGameActive = false;
                 clearInterval(id);
                 this.parentElement.removeChild(this.healthElement);
                 this.parentElement.removeChild(this.scoreElement);
-                this.createGameOverScreen();
+                this.createGameOverScreen('You Completed The Game.', DISTANCE_LIMIT);
             } else if(Math.round(this.car.health) <= 0) {
-                console.log(`Game Over!`);
                 this.isGameActive = false;
                 clearInterval(id);
                 this.parentElement.removeChild(this.healthElement);
                 this.parentElement.removeChild(this.scoreElement);
-                this.createGameOverScreen();
+                this.createGameOverScreen('Game Over!', this.distance);
             }
             this.checkObstacleCollision();
 
@@ -226,7 +224,7 @@ class World {
         }
     }
 
-    createGameOverScreen() {
+    createGameOverScreen(msg, score) {
         let gameOverScreen = new Screen({
             screenName: 'game-over-screen'
         });
@@ -234,7 +232,7 @@ class World {
         gameOverScreen.display();
         let gameOverText = document.createElement('div');
         gameOverText.className = "result-screen-game-over";
-        gameOverText.innerHTML = "<p>Game Over</p>";
+        gameOverText.innerHTML = `<p> ${msg} </p>`;
         gameOverScreen.element.appendChild(gameOverText);
         gameOverScreen.element.appendChild(document.createElement('hr'));
 
@@ -246,6 +244,9 @@ class World {
         let tryAgainBtn = document.createElement('button');
         tryAgainBtn.className = 'try-again-button';
         tryAgainBtn.textContent = 'Try Again!';
+        if(score >= DISTANCE_LIMIT) {
+            tryAgainBtn.style.top = 380 + 'px';
+        }
         gameOverScreen.element.appendChild(tryAgainBtn);
         gameOverScreen.element.appendChild(document.createElement('hr'));
         tryAgainBtn.onclick = () => {

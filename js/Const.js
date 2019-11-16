@@ -11,4 +11,5 @@ const BLOCK_WIDTH = Math.abs(TRACK_WIDTH / LANES);
 const POSSIBLE_X = getPossibleX(BLOCK_WIDTH, LANES);
 const BULLET_SIZE = 10;
 const BULLET_SPEED = 10;
+const DISTANCE_LIMIT = 6000;
 let count = 0;
